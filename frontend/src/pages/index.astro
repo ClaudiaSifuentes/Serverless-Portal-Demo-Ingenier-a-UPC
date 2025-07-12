@@ -1,0 +1,107 @@
+---
+const api = import.meta.env.PUBLIC_API_URL;   // viene de frontend/.env
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>IEEE UPC – Portal demo</title>
+    <style>
+      body{font-family:system-ui,sans-serif;margin:0;color:#1a1a1a;background:#f7f9fc}
+      header{padding:4rem 1rem;text-align:center;background:#00427a;color:#fff}
+      header h1{margin:0;font-size:2.5rem}
+      main{max-width:900px;margin:auto;padding:2rem}
+      .grid{display:grid;gap:1.5rem;margin-top:2rem}
+      @media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}
+      .card{background:#fff;border-radius:12px;padding:1.5rem;box-shadow:0 4px 12px #0002}
+      form input,form button{padding:.5rem .9rem;font-size:1rem;margin-right:.5rem;border:1px solid #ccc;border-radius:6px}
+      form button{background:#00427a;color:#fff;border:none;cursor:pointer}
+    </style>
+  </head>
+  <body>
+    <!-- Hero -->
+    <header style="padding:4rem 1rem;text-align:center;background:#ba111f;color:#fff">
+    <h1 style="margin:0 0 .5rem;font-size:2.5rem">
+        Comunidad Ingeniería — UPC
+    </h1>
+    <h2 style="margin:0;font-weight:400;font-size:1.15rem">
+        IEEE, ACM, RAS, CIS & más • Conecta capítulos, ideas y talento
+    </h2>
+
+    <a href="https://miupc.pe/unete"
+        style="display:inline-block;margin-top:2rem;padding:.8rem 1.4rem;
+                background:#ed7f7b;color:#fff;border-radius:10px;text-decoration:none;
+                font-weight:600">
+        🚀 Únete al capítulo que más te inspire
+    </a>    
+    </header>
+
+    <main>
+    <!-- Beneficios -->
+    <section style="max-width:900px;margin:3rem auto;padding:0 1rem">
+    <div style="
+        display:grid;
+        gap:1.5rem;
+        grid-template-columns:repeat(3,1fr);   /* 3 columnas fijas */
+    ">
+        <div class="card">
+        <h3>🤝 Networking</h3>
+        <p>Conecta con estudiantes y profesionales apasionados por la tecnología.
+            ¡Tu próxima colaboración empieza aquí!</p>
+        </div>
+
+        <div class="card">
+        <h3>📚 Recursos</h3>
+        <p>Acceso a talleres, MOOCs y material exclusivo para potenciar tu carrera de Ingeniería.</p>
+        </div>
+
+        <div class="card">
+        <h3>🏅 Certificados</h3>
+        <p>Participa en eventos y obtén constancias oficiales de IEEE/ACM para tu CV y LinkedIn.</p>
+        </div>
+    </div>
+    </section>
+
+
+      <!-- Formulario -->
+      <h2 style="margin-top:3rem">Crear evento</h2>
+      <form id="f">
+        <input placeholder="Nombre del evento" name="name" required />
+        <input type="date" name="date" required />
+        <button>Guardar</button>
+      </form>
+    </main>
+
+    <script type="module">
+    /* Astro reemplaza ${api} en el build */
+    const api = "https://ng5j0y30x7.execute-api.us-east-1.amazonaws.com/"
+
+    const form = document.getElementById('f');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(form));
+
+        try {
+        const res = await fetch(`${api}/events`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+
+        if (res.ok) {
+            alert('✔️ Evento creado correctamente');
+            form.reset();
+        } else {
+            alert('Error: ' + (await res.text()));
+        }
+        } catch (err) {
+        console.error(err);
+        alert('Error de red');
+        }
+    });
+    </script>
+
+  </body>
+</html>
+
